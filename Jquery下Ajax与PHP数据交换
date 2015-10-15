@@ -1,0 +1,53 @@
+<!----index.php---->
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+	$(function(){
+		var my_data=new Array();
+		var my_data1=new Array();
+		my_data[0]=0;
+		my_data[1]=1;
+		my_data[2]=2;
+		  
+		my_data1[0]=10;
+		my_data1[1]=11;
+		my_data1[2]=12;
+		 
+		$.ajax({
+			url: "ajax_php.php",  
+			type: "POST",
+			data:{trans_data:my_data,trans_data1:my_data1},
+			dataType: "json",
+			error: function(){  
+				alert('Error loading XML document');  
+			},  
+			success: function(data){//如果调用php成功            
+				var back="";
+				for(var i=0;i<(data.length);i++){
+					for(var j=0;j<data[0].length;j++){
+						back+=" "+i+j+":"+data[i][j];
+					}
+					back+="\n";
+				}
+				$("div").html(back);
+			}
+		});
+	});
+</script>
+</body>
+<div></div>
+</html>
+<!-----ajax_php.php---->
+<?php
+     header('Content-Type:text/html; charset=gb2312');//使用gb2312编码，使中文不会变成乱码    
+     $backValue=array();
+	 //在 PHP 中，预定义的 $_POST 变量用于收集来自 method="post" 的表单中的值。
+     $backValue[0]=$_POST['trans_data'];    
+     $backValue[1]=$_POST['trans_data1'];
+     
+     echo json_encode($backValue);//json_encode对变量进行 JSON 编码,json_decode对 JSON 格式的字符串进行解码，转换为 PHP 变量
+ ?>
